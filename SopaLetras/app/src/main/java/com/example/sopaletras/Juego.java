@@ -8,10 +8,15 @@ import java.util.Arrays;
 public class Juego {
 
     private ArrayList<ArrayList<String>> tablero;
-    private String[] arrayPalabras = {"LONDRES", "BOGOTA", "MADRID", "PARIS", "ARGEL", "PIONYANG", "DUBLIN", "TOKYO"};
-    private String[] arrayLetras = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
     private int ancho = 10;
     private int alto = 10;
+
+    private int xAlmacenada;
+    private int yAlmacenada;
+
+    public int aciertos = 5;
+
+    private ArrayList<Palabra> arrayPalabras = new ArrayList<>();
 
     public Juego(){
         tablero = new ArrayList<ArrayList<String>>();
@@ -66,10 +71,89 @@ public class Juego {
 
     private void actualizarTablero(Palabra palabra){
         palabra.revertirPalabra();
+        Log.d("palabra", "palabra: "+palabra.palabra);
         for(int i = 1; i< palabra.palabraArray.length; i++){
+            Log.d("palabra", "X: "+palabra.x+" Y: "+palabra.y);
             this.tablero.get(palabra.x).set(palabra.y, palabra.palabraArray[i]);
             palabra.calculaDireccion();
         }
+        palabra.retrocederDir();
+        this.arrayPalabras.add(palabra);
+    }
+
+    private void actualizarTableroEncontrado(Palabra palabra){
+        palabra.revertirPalabra();
+        for(int i = 1; i< palabra.palabraArray.length; i++){
+            this.tablero.get(palabra.x).set(palabra.y, palabra.palabraArray[i]+"*");
+            palabra.calculaDireccion();
+        }
+        this.aciertos--;
+    }
+
+    public void setAlmacenado(int x, int y){
+        this.xAlmacenada = x;
+        this.yAlmacenada = y;
+
+    }
+
+    public boolean comprobarSeleccion(int x, int y){
+        if(x != this.xAlmacenada || y != this.yAlmacenada){
+            Palabra palabraCoincidente = new Palabra();
+            boolean encontrado = false;
+            for(Palabra palabra: this.arrayPalabras){
+                Log.d("contador", "Palabra1: "+palabra.palabra);
+                Log.d("contador", "xAlm: "+this.xAlmacenada+" yAlm: "+this.yAlmacenada);
+                Log.d("contador", "PalabraXInc: "+palabra.xInicial+" PalabraYInc: "+palabra.yInicial);
+                Log.d("contador", "PalabraX: "+palabra.x+" PalabraY: "+palabra.y);
+
+                if(palabra.xInicial == this.xAlmacenada){
+                    if(palabra.yInicial == this.yAlmacenada){
+                        palabraCoincidente = palabra;
+                        encontrado = true;
+                        Log.d("contador", "Palabra encontrada");
+                    }
+                }
+                if(palabra.x == this.xAlmacenada){
+                    if(palabra.y == this.yAlmacenada){
+                        palabraCoincidente = palabra;
+                        encontrado = true;
+                        Log.d("contador", "Palabra encontrada");
+                    }
+                }
+            }
+
+            if(encontrado){
+                Log.d("contador", "hola");
+                for(Palabra palabra: this.arrayPalabras){
+                    Log.d("contador", "Palabra: "+palabra.palabra);
+                    Log.d("contador", "x: "+x+" y: "+y);
+                    Log.d("contador", "PalabraXInc: "+palabra.xInicial+" PalabraYInc: "+palabra.yInicial);
+                    Log.d("contador", "PalabraX: "+palabra.x+" PalabraY: "+palabra.y);
+                    if(palabra.xInicial == x){
+                        if(palabra.yInicial == y){
+                            if(palabraCoincidente.palabra == palabra.palabra){
+                                Log.d("contador", "Palabra2: "+palabra.palabra);
+                                actualizarTableroEncontrado(palabra);
+                                return true;
+                            }
+
+                        }
+                    }if(palabra.x == x){
+                        if(palabra.y == y){
+                            Log.d("contador", "ENCONTRADO");
+                            if(palabraCoincidente.palabra == palabra.palabra){
+                                Log.d("contador", "Palabra2: "+palabra.palabra);
+                                actualizarTableroEncontrado(palabra);
+                                return true;
+                            }
+
+                        }
+                    }
+                }
+            }
+
+        }
+        return false;
     }
 
     public ArrayList<ArrayList<String>> getTablero(){

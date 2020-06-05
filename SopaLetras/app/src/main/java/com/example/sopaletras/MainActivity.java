@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     RequestQueue queue;
     String URL = "http://212.225.186.28/sopaletrasAPI/json.php";
 
+    boolean pulsado = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                     img.setImageResource(letras[r.nextInt(26)]);
                 }else{
                     ImageView img= (ImageView) findViewById(idsImagenes[i][j]);
-                    img.setImageResource(letras2[convertirLetraAIndice(juego.getTablero().get(i).get(j))]);
+                    img.setImageResource(letras[convertirLetraAIndice(juego.getTablero().get(i).get(j))]);
                 }
             }
         }
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int convertirLetraAIndice(String letra){
         for(int i = 0; i < arrayLetras.length; i++){
+            letra = letra.replaceAll("\\*", "");
             if(letra.equals(arrayLetras[i])){
                 return i;
             }
@@ -105,6 +108,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View v){
+        if(juego.aciertos >0){
+            for(int i = 0; i<idsImagenes.length; i++){
+                for(int j = 0; j<idsImagenes[i].length; j++){
+                    if(v.getId() == idsImagenes[i][j]){
+                        if(pulsado){
+                            if(juego.comprobarSeleccion(i, j)){
+                                actualizarVista();
+                                if(juego.aciertos == 0){
+                                    Toast.makeText(MainActivity.this,"¡Has ganado, enhorabuena!",Toast.LENGTH_LONG).show();
+                                }
+                            }
+                            pulsado = false;
+                        }else{
+                            pulsado = true;
+                            juego.setAlmacenado(i, j);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
+    private void actualizarVista(){
+        for(int i = 0; i < 10; i++){
+            for(int j = 0; j < 10; j++){
+                if(juego.getTablero().get(i).get(j).length() >1){
+                    ImageView img= (ImageView) findViewById(idsImagenes[i][j]);
+                    img.setImageResource(letras2[convertirLetraAIndice(juego.getTablero().get(i).get(j))]);
+                }
+            }
+        }
     }
 }

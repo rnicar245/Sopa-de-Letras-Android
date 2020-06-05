@@ -13,10 +13,9 @@ public class Palabra {
     public String[] palabraArray;
     public String palabra;
 
-    public static String[] arrayPalabras ={"LONDRES", "BOGOTA", "MADRID", "PARIS", "ARGEL", "PIONYANG", "DUBLIN", "TOKYO"};
+    public static String[] arrayPalabras;
 
     public Palabra(){
-        Log.d("respuesta","hola?");
         Random r = new Random();
         this.palabra = arrayPalabras[r.nextInt(8)];
         this.palabraArray = this.palabra.split("");
@@ -67,16 +66,54 @@ public class Palabra {
         }
     }
 
+    public void retrocederDir(){
+        switch (this.dir) {
+            case 0:
+                //Abajo arriba
+                this.x += 1;
+                break;
+            case 1:
+                //Izquierda derecha
+                this.y -= 1;
+                break;
+            case 2:
+                //Arriba abajo
+                this.x -= 1;
+                break;
+            case 3:
+                //Derecha izquierda
+                this.y += 1;
+                break;
+            case 4:
+                //Abajo izquierda - Arriba derecha
+                this.x += 1;
+                this.y -= 1;
+                break;
+            case 5:
+                //Abajo derecha - Arriba izquierda
+                this.x += 1;
+                this.y += 1;
+                break;
+            case 6:
+                //Arriba izquierda - Abajo derecha
+                this.x -= 1;
+                this.y -= 1;
+                break;
+            case 7:
+                //Arriba derecha - Abajo izquierda
+                this.x -= 1;
+                this.y += 1;
+                break;
+        }
+    }
+
     public void revertirPalabra(){
         this.x = this.xInicial;
         this.y = this.yInicial;
     }
 
     public static void setArrayPalabras(String aP){
-        Log.d("respuesta",arrayPalabras[0]);
         arrayPalabras = aP.split(",");
-        Log.d("respuesta",arrayPalabras[0]);
-
     }
 
 }
