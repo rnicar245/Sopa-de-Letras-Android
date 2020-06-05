@@ -1,5 +1,7 @@
 package com.example.sopaletras;
 
+import android.util.Log;
+
 import java.util.Random;
 
 public class Palabra {
@@ -11,9 +13,10 @@ public class Palabra {
     public String[] palabraArray;
     public String palabra;
 
-    public String[] arrayPalabras = {"LONDRES", "BOGOTA", "MADRID", "PARIS", "ARGEL", "PIONYANG", "DUBLIN", "TOKYO"};
+    public static String[] arrayPalabras ={"LONDRES", "BOGOTA", "MADRID", "PARIS", "ARGEL", "PIONYANG", "DUBLIN", "TOKYO"};
 
     public Palabra(){
+        Log.d("respuesta","hola?");
         Random r = new Random();
         this.palabra = arrayPalabras[r.nextInt(8)];
         this.palabraArray = this.palabra.split("");
@@ -67,6 +70,13 @@ public class Palabra {
     public void revertirPalabra(){
         this.x = this.xInicial;
         this.y = this.yInicial;
+    }
+
+    public static void setArrayPalabras(String aP){
+        Log.d("respuesta",arrayPalabras[0]);
+        arrayPalabras = aP.split(",");
+        Log.d("respuesta",arrayPalabras[0]);
+
     }
 
 }

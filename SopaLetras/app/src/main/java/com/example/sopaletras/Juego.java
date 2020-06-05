@@ -48,7 +48,6 @@ public class Juego {
                         if(palabra.x < 0 || palabra.y <0 || palabra.x>=alto || palabra.y>=ancho){
                             noValido = true;
                         }else{
-                            Log.d("Tablero", "palabrax: "+palabra.x+" palabray: "+palabra.y);
                             if(this.tablero.get(palabra.x).get(palabra.y) != "#"){
                                 if(this.tablero.get(palabra.x).get(palabra.y) != palabra.palabraArray[i]){
                                     noValido = true;
@@ -60,7 +59,6 @@ public class Juego {
                 }
             }while(noValido);
             arrayPalabrasRepetidas.add(palabra.palabra);
-            Log.d("Tablero", "contador: "+contador);
             actualizarTablero(palabra);
             contador--;
         }while(contador != 0);
@@ -68,8 +66,7 @@ public class Juego {
 
     private void actualizarTablero(Palabra palabra){
         palabra.revertirPalabra();
-        for(int i = 0; i< palabra.palabraArray.length; i++){
-            Log.d("Tablero", "palabrax: "+palabra.x+" palabray: "+palabra.y);
+        for(int i = 1; i< palabra.palabraArray.length; i++){
             this.tablero.get(palabra.x).set(palabra.y, palabra.palabraArray[i]);
             palabra.calculaDireccion();
         }

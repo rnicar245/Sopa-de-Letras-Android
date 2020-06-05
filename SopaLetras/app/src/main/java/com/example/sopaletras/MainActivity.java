@@ -5,7 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import java.util.Random;
 
@@ -31,7 +40,17 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.s,R.drawable.t,R.drawable.u,R.drawable.v,R.drawable.w,R.drawable.x,
             R.drawable.y,R.drawable.z};
 
+    private final int letras2[] = {
+            R.drawable.a2,R.drawable.b2,R.drawable.c2,R.drawable.d2,R.drawable.e2,R.drawable.f2,
+            R.drawable.g2,R.drawable.h2,R.drawable.i2,R.drawable.j2,R.drawable.k2,R.drawable.l2,
+            R.drawable.m2,R.drawable.n2,R.drawable.o2,R.drawable.p2,R.drawable.q2,R.drawable.r2,
+            R.drawable.s2,R.drawable.t2,R.drawable.u2,R.drawable.v2,R.drawable.w2,R.drawable.x2,
+            R.drawable.y2,R.drawable.z2};
+
     private Juego juego;
+
+    RequestQueue queue;
+    String URL = "http://212.225.186.28/sopaletrasAPI/json.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +60,26 @@ public class MainActivity extends AppCompatActivity {
         }else{
             setContentView(R.layout.horizontal);
         }
+
+        queue = Volley.newRequestQueue(this);
+        StringRequest request = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                String respuesta = response.replaceAll("\\[", "");
+                respuesta = respuesta.replaceAll("\\]", "");
+                respuesta = respuesta.replaceAll("\"", "");
+                Palabra.setArrayPalabras(respuesta);
+                iniciarJuego();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("error",error.toString());
+            }
+        });
+        queue.add(request);
+    }
+    private void iniciarJuego(){
         juego = new Juego();
         for(int i = 0; i < 10; i++){
             for(int j = 0; j < 10; j++){
@@ -50,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                     img.setImageResource(letras[r.nextInt(26)]);
                 }else{
                     ImageView img= (ImageView) findViewById(idsImagenes[i][j]);
-                    img.setImageResource(letras[convertirLetraAIndice(juego.getTablero().get(i).get(j))]);
+                    img.setImageResource(letras2[convertirLetraAIndice(juego.getTablero().get(i).get(j))]);
                 }
             }
         }
@@ -58,12 +97,14 @@ public class MainActivity extends AppCompatActivity {
 
     private int convertirLetraAIndice(String letra){
         for(int i = 0; i < arrayLetras.length; i++){
-            Log.d("Indice", "letra: "+letra+" letraActual: "+arrayLetras[i]+ " indice: "+i);
             if(letra.equals(arrayLetras[i])){
-                Log.d("Indice", "hola");
                 return i;
             }
         }
         return 0;
+    }
+
+    public void onClick(View v){
+
     }
 }
