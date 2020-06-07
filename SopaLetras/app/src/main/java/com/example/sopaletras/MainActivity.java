@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private Juego juego;
 
     RequestQueue queue;
-    String URL = "http://212.225.186.28/sopaletrasAPI/json.php";
+    String URL = "http://localhost/sopaletrasAPI/json.php";
 
     boolean pulsado = false;
 
